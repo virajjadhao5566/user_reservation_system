@@ -1,8 +1,7 @@
 package io.bootify.my_app.service;
 
-import io.bootify.my_app.domain.Reservation;
-import io.bootify.my_app.domain.User;
-import io.bootify.my_app.model.UserDTO;
+import io.bootify.my_app.model.Reservation;
+import io.bootify.my_app.model.User;
 import io.bootify.my_app.repos.ReservationRepository;
 import io.bootify.my_app.repos.UserRepository;
 import io.bootify.my_app.util.NotFoundException;
@@ -25,29 +24,29 @@ public class UserService {
         this.reservationRepository = reservationRepository;
     }
 
-    public List<UserDTO> findAll() {
+    public List<User> findAll() {
         final List<User> users = userRepository.findAll(Sort.by("id"));
         return users.stream()
-                .map(user -> mapToDTO(user, new UserDTO()))
+                .map(user -> mapToDTO(user, new User()))
                 .toList();
     }
 
-    public UserDTO get(final UUID id) {
+    public User get(final UUID id) {
         return userRepository.findById(id)
-                .map(user -> mapToDTO(user, new UserDTO()))
+                .map(user -> mapToDTO(user, new User()))
                 .orElseThrow(NotFoundException::new);
     }
 
-    public UUID create(final UserDTO userDTO) {
+    public UUID create(final User User) {
         final User user = new User();
-        mapToEntity(userDTO, user);
+        mapToEntity(User, user);
         return userRepository.save(user).getId();
     }
 
-    public void update(final UUID id, final UserDTO userDTO) {
+    public void update(final UUID id, final User User) {
         final User user = userRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(userDTO, user);
+        mapToEntity(User, user);
         userRepository.save(user);
     }
 
@@ -55,14 +54,14 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    private UserDTO mapToDTO(final User user, final UserDTO userDTO) {
-        userDTO.setId(user.getId());
-        userDTO.setName(user.getName());
-        return userDTO;
+    private User mapToDTO(final User user, final User User) {
+        User.setId(user.getId());
+        User.setName(user.getName());
+        return User;
     }
 
-    private User mapToEntity(final UserDTO userDTO, final User user) {
-        user.setName(userDTO.getName());
+    private User mapToEntity(final User User, final User user) {
+        user.setName(User.getName());
         return user;
     }
 
